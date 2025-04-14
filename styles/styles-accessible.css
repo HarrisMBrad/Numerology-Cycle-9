@@ -1,0 +1,62 @@
+/* Accessible Color Scheme for Numerology-Cycle-9 */
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background-color: #fdfdfd;
+    color: #1a1a1a;
+  }
+  
+  header {
+    background-color: #003f5c;
+    color: white;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  section {
+    padding: 2rem;
+    max-width: 960px;
+    margin: auto;
+  }
+  
+  .cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background-color: #ffa600;
+    color: #1a1a1a;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-top: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cta-button:hover {
+    background-color: #cc8400;
+    color: white;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #003f5c;
+    color: white;
+  }
+  
+  h1, h2 {
+    color: #003f5c;
+  }
+  
+  ul {
+    padding-left: 1.2rem;
+  }
+  
+  blockquote {
+    font-style: italic;
+    border-left: 4px solid #ffa600;
+    margin-left: 1rem;
+    padding-left: 1rem;
+    color: #003f5c;
+  }
+  
