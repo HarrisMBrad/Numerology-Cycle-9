@@ -10,7 +10,8 @@
 
 **Numerology-Cycle-9** is a living codebase that blends personal knowledge tools with evolving automation routines. It’s structured around mindful cycles and designed to scale from daily journaling to smart AI-driven flows.
 
-Supports:
+Supports
+
 - 🧠 Mental state tracking & mindfulness
 - 📅 Daily & cyclical scripting
 - 🔁 End/start-of-day transitions
