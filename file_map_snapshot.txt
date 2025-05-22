@@ -69,5 +69,4 @@
 ./phaseLoop.js
 ./README.md
 ./Robotic_Systems/1_Presence/onStart_Origin.md
-./structure_snapshot.md
 ./styles/styles-accessible.css
