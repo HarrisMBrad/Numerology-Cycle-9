@@ -19,6 +19,15 @@ body {
     max-width: 960px;
     margin: auto;
   }
+
+
+
+.highlight {
+  background-color: #ffeeba; /* or something noticeable */
+  font-weight: bold;
+  border-left: 4px solid #007acc;
+}
+
   
   .cta-button {
     display: inline-block;
