@@ -2,7 +2,7 @@
 // Description: Runs the 9-phase loop logic for Numerology-Cycle-9.
 // Dependencies: onStart.js, corpofFinality.js
 
-const { onStart } = require('./onStart');
+const { onStart, calculateNumerology } = require('./onStart');
 // Optional: const { phaseCorp, mindStateRecursion } = require('./corpofFinality');
 
 function mindSetRecursion(taskNum, totalTasks, phase) {
@@ -11,15 +11,25 @@ function mindSetRecursion(taskNum, totalTasks, phase) {
   mindSetRecursion(taskNum + 1, totalTasks, phase);
 }
 
+function titanTalk(phase) {
+  console.log(`🗣 TITAN TALK: Engaged during ${phase} phase`);
+}
+
 function onTask(phase) {
   console.log(`TASK TODO: Starting KPI creation for phase: ${phase}`);
   mindSetRecursion(1, 4, phase);
+  if (phase === "Recalibration" || phase === "Release + Restart") {
+    titanTalk(phase);
+  }
 }
 
-function onUpdate() {
+function onUpdate(phase) {
   console.log("UPDATE: Checking system state");
-  const todayNum = 9; // Simplified for modular demo
+  const todayNum = calculateNumerology(new Date().toLocaleDateString('en-US'));
   console.log(`》onUpdate: State refreshed, Numerology: ${todayNum}`);
+  if (phase === "Recalibration") {
+    titanTalk(phase);
+  }
 }
 
 function onStop() {
@@ -51,12 +61,13 @@ function phaseLoop() {
 
   const phaseInterval = setInterval(() => {
     const phase = phases[phaseIndex];
-    console.log(`Starting Phase: ${phase}`);
+    const todayNum = calculateNumerology(new Date().toLocaleDateString('en-US'));
+    console.log(`Starting Phase: ${phase} → Numerology: ${todayNum}`);
 
     onTask(phase);
 
     if (["Reflection", "Recalibration"].includes(phase)) {
-      onUpdate();
+      onUpdate(phase);
     }
 
     if (phase === "Release + Restart") {

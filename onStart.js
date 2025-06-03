@@ -40,4 +40,4 @@ function onStart() {
 }
 
 // ✨ Exported for use in main engine loop
-module.exports = { onStart };
+module.exports = { onStart, calculateNumerology };
