@@ -63,5 +63,10 @@ function onStart() {
   console.log("🕰 Legacy Seeds: First built on 2025-04-13 by brforeal.dev — as a system that thinks in time.");
 }
 
-// ✨ Exported for use in main engine loop
-module.exports = { onStart, calculateNumerology };
+// ✨ Exported for use in main engine loop + journaling helpers
+module.exports = {
+  onStart,
+  calculateNumerology,
+  reduceToCoreNumerology,
+  MASTER_NUMBERS,
+};
