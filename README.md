@@ -70,13 +70,23 @@ Built to scale across:
 
 ---
 
+## 📦 Upwork Deliverable Tracking
+
+- ✅ Added a dedicated `upworkTracker.js` module that maps default Upwork deliverables to cycle phases and captures progress history.
+- ✅ Phase loop now logs deliverable expectations each time a phase engages, advancing statuses and highlighting risk inside the journal.
+- ✅ End-of-day rituals archive a full Upwork deliverable snapshot so the next restart includes status, outstanding phases, and at-risk work.
+
+---
+
 ## 🧠 Next Steps
 
 - [ ] Build out phase-specific `.md` templates (`planning.md`, `reflection.log`, etc.)
 - [x] Automate numerology calculation based on `Date()`
 - [x] Add journaling and smart logging per phase
+- [x] Integrate Upwork deliverable tracking into cycle engine
 - [ ] Add journaling and smart logging per phase
-- [ ] Integrate Upwork deliverable tracking into cycle engine
+
+
 
 ---
 

@@ -4,6 +4,7 @@
 
 const { onStart, calculateNumerology, MASTER_NUMBERS } = require('./onStart');
 const { createPhaseJournal } = require('./phaseJournal');
+
 // Optional: const { phaseCorp, mindStateRecursion } = require('./corpofFinality');
 
 function mindSetRecursion(taskNum, totalTasks, phase, steps = []) {
@@ -20,7 +21,9 @@ function titanTalk(phase) {
   return message;
 }
 
+
 function onTask(phase, journal) {
+
   console.log(`TASK TODO: Starting KPI creation for phase: ${phase}`);
   const kpiLogs = mindSetRecursion(1, 4, phase, []);
 
@@ -40,12 +43,14 @@ function onTask(phase, journal) {
     }
   }
 
+
   return kpiLogs;
 }
 
 
 function onUpdate(phase) {
   console.log("UPDATE: Checking system state");
+
 
   const todayNum = calculateNumerology();
   console.log(`》onUpdate: State refreshed, Numerology: ${todayNum}`);
@@ -62,7 +67,9 @@ function onUpdate(phase) {
     const message = titanTalk(phase);
     if (journal) {
       journal.recordEvent(phase, 'alignment', `${message} (via update)`, {
+
         tags: ['titan-talk', 'update'],
+
       });
     }
   }
@@ -79,7 +86,9 @@ function onStop(journal) {
   }
 }
 
+
 function onEOD(journal) {
+
   console.log('EOD: End of day processing');
 
   if (journal) {
@@ -105,6 +114,7 @@ function phaseLoop() {
 
   const journal = createPhaseJournal(phases);
 
+
   let phaseIndex = 0;
   const phaseDuration = 4800000; // 1.33 hours
   const totalDuration = 43200000; // 12 hours
@@ -112,6 +122,7 @@ function phaseLoop() {
 
   const phaseInterval = setInterval(() => {
     const phase = phases[phaseIndex];
+
 
     const todayNum = calculateNumerology();
     console.log(`Starting Phase: ${phase} → Numerology: ${todayNum}`);
@@ -133,6 +144,7 @@ function phaseLoop() {
 
     if (phase === 'Release + Restart') {
       onEOD(journal);
+
       journal.completePhase(phase, {
         summary: 'Cycle archived and restart prepared.',
         numerology,
@@ -172,6 +184,7 @@ function phaseLoop() {
       });
 
       onEOD(journal);
+
       journal.completePhase(fallbackPhase, {
         summary: 'Cycle closed via safety timer',
         numerology,

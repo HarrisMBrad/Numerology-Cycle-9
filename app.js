@@ -16,7 +16,9 @@ const folderNames = [
 
 const MASTER_NUMBERS = new Set([11, 22, 33]);
 
+
 // [MERGE: Retained from codex branch for journaling functionality]
+
 const PHASE_FOCUS_MAP = {
   Presence: 'Ground the system, document state, and breathe into awareness.',
   Planning: 'Design the path forward and translate numerology into intention.',
@@ -332,6 +334,7 @@ function createPhaseJournal(phaseList) {
 
 const journal = createPhaseJournal(phases);
 const phaseLogs = []; // [MERGE: Retained from dev-branch for additional logging]
+
 let phaseIndex = 0;
 let cycleClosed = false;
 
@@ -394,7 +397,9 @@ function onTask(phase) {
   const timestamp = new Date().toLocaleTimeString();
   const startMessage = `🌀 Task for Phase: "${phase}" started at ${timestamp} (Numerology: ${numerology})`;
   console.log(startMessage);
+
   phaseLogs.push(startMessage); // [MERGE: Added dev-branch's phaseLogs for compatibility]
+
   journal.recordEvent(phase, 'start-note', startMessage, {
     numerology,
     ordinal: phases.indexOf(phase) + 1,
@@ -405,6 +410,7 @@ function onTask(phase) {
   journal.recordEvent(phase, 'intent', phaseMessage, {
     focus: PHASE_FOCUS_MAP[phase],
   });
+
 
   const folderName = folderNames[phases.indexOf(phase)] || phase.replace(/\s+/g, '_'); // [MERGE: Used codex's folderNames with dev-branch's fallback]
   const folderLog = `📂 Logging to folder: /Numerology-Cycle-9/${folderName}`;
