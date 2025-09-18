@@ -43,8 +43,10 @@ function onTask(phase, journal) {
   return kpiLogs;
 }
 
-function onUpdate(phase, journal) {
-  console.log('UPDATE: Checking system state');
+
+function onUpdate(phase) {
+  console.log("UPDATE: Checking system state");
+
   const todayNum = calculateNumerology();
   console.log(`》onUpdate: State refreshed, Numerology: ${todayNum}`);
 
@@ -110,7 +112,10 @@ function phaseLoop() {
 
   const phaseInterval = setInterval(() => {
     const phase = phases[phaseIndex];
-    const numerology = calculateNumerology();
+
+    const todayNum = calculateNumerology();
+    console.log(`Starting Phase: ${phase} → Numerology: ${todayNum}`);
+
 
     journal.startPhase(phase, {
       numerology,

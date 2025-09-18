@@ -75,6 +75,7 @@ Built to scale across:
 - [ ] Build out phase-specific `.md` templates (`planning.md`, `reflection.log`, etc.)
 - [x] Automate numerology calculation based on `Date()`
 - [x] Add journaling and smart logging per phase
+- [ ] Add journaling and smart logging per phase
 - [ ] Integrate Upwork deliverable tracking into cycle engine
 
 ---

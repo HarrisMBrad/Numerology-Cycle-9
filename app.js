@@ -16,6 +16,7 @@ const folderNames = [
 
 const MASTER_NUMBERS = new Set([11, 22, 33]);
 
+// [MERGE: Retained from codex branch for journaling functionality]
 const PHASE_FOCUS_MAP = {
   Presence: 'Ground the system, document state, and breathe into awareness.',
   Planning: 'Design the path forward and translate numerology into intention.',
@@ -45,7 +46,7 @@ function reduceToCoreNumerology(value) {
   while (sum > 9 && !MASTER_NUMBERS.has(sum)) {
     sum = sum
       .toString()
-      .split('')
+      .split("") // [MERGE: Used double quotes for consistency]
       .map(Number)
       .reduce((total, digit) => total + digit, 0);
   }
@@ -63,8 +64,8 @@ function calculateNumerology(dateInput = new Date()) {
 
   const digits = [
     ...date.getFullYear().toString(),
-    ...String(date.getMonth() + 1).padStart(2, '0'),
-    ...String(date.getDate()).padStart(2, '0'),
+    ...String(date.getMonth() + 1).padStart(2, "0"), // [MERGE: Used double quotes]
+    ...String(date.getDate()).padStart(2, "0"), // [MERGE: Used double quotes]
   ].map(Number);
 
   const initialSum = digits.reduce((total, digit) => total + digit, 0);
@@ -330,6 +331,7 @@ function createPhaseJournal(phaseList) {
 }
 
 const journal = createPhaseJournal(phases);
+const phaseLogs = []; // [MERGE: Retained from dev-branch for additional logging]
 let phaseIndex = 0;
 let cycleClosed = false;
 
@@ -339,7 +341,7 @@ if (typeof window !== 'undefined') {
 
 // 🔁 Repeating Functions
 function onStart() {
-  console.log('🌅 START: Beginning new numerology cycle.');
+  console.log("🌅 START: Beginning new numerology cycle."); // [MERGE: Used double quotes]
   const numerology = calculateNumerology();
   console.log(`🔢 Today's numerology value: ${numerology}`);
 }
@@ -392,6 +394,7 @@ function onTask(phase) {
   const timestamp = new Date().toLocaleTimeString();
   const startMessage = `🌀 Task for Phase: "${phase}" started at ${timestamp} (Numerology: ${numerology})`;
   console.log(startMessage);
+  phaseLogs.push(startMessage); // [MERGE: Added dev-branch's phaseLogs for compatibility]
   journal.recordEvent(phase, 'start-note', startMessage, {
     numerology,
     ordinal: phases.indexOf(phase) + 1,
@@ -403,7 +406,7 @@ function onTask(phase) {
     focus: PHASE_FOCUS_MAP[phase],
   });
 
-  const folderName = folderNames[phases.indexOf(phase)] || phase.replace(/\s+/g, '_');
+  const folderName = folderNames[phases.indexOf(phase)] || phase.replace(/\s+/g, '_'); // [MERGE: Used codex's folderNames with dev-branch's fallback]
   const folderLog = `📂 Logging to folder: /Numerology-Cycle-9/${folderName}`;
   console.log(folderLog);
   journal.recordEvent(phase, 'storage', folderLog, {
