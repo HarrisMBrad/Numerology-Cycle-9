@@ -7,16 +7,39 @@ document.addEventListener("DOMContentLoaded", () => {
     "Correction", "Connection", "Rest", "Recalibration", "Release + Restart"
   ];
 
-  function calculateNumerology(dateStr) {
-    const digits = dateStr.replace(/\D/g, "").split("").map(Number);
-    let sum = digits.reduce((a, b) => a + b, 0);
-    while (sum > 9 && ![11, 22, 33].includes(sum)) {
-      sum = sum.toString().split("").reduce((a, b) => a + b, 0);
+  const MASTER_NUMBERS = new Set([11, 22, 33]);
+
+  function reduceToCoreNumerology(value) {
+    let sum = value;
+    while (sum > 9 && !MASTER_NUMBERS.has(sum)) {
+      sum = sum
+        .toString()
+        .split("")
+        .map(Number)
+        .reduce((total, digit) => total + digit, 0);
     }
     return sum;
   }
 
-  const todayNum = calculateNumerology(new Date().toLocaleDateString("en-US"));
+  function calculateNumerology(dateInput = new Date()) {
+    let date = dateInput instanceof Date ? dateInput : new Date(dateInput);
+
+    if (Number.isNaN(date.getTime())) {
+      console.warn("calculateNumerology received an invalid date input. Defaulting to today's date.");
+      date = new Date();
+    }
+
+    const digits = [
+      ...date.getFullYear().toString(),
+      ...String(date.getMonth() + 1).padStart(2, "0"),
+      ...String(date.getDate()).padStart(2, "0"),
+    ].map(Number);
+
+    const initialSum = digits.reduce((total, digit) => total + digit, 0);
+    return reduceToCoreNumerology(initialSum);
+  }
+
+  const todayNum = calculateNumerology();
   const currentPhaseIndex = ((todayNum - 1) % phases.length) + 1;
 
   const rows = document.querySelectorAll(".cycle-phase-row");
@@ -31,6 +54,8 @@ document.addEventListener("DOMContentLoaded", () => {
     phaseHeader.textContent = `Now in Phase: ${phases[currentPhaseIndex - 1]}`;
   }
 
-  console.log(`🔁 Phase ${currentPhaseIndex} (${phases[currentPhaseIndex - 1]}) is active and highlighted.`);
+  console.log(
+    `🔁 Phase ${currentPhaseIndex} (${phases[currentPhaseIndex - 1]}) is active and highlighted. Numerology: ${todayNum}`
+  );
 });
 
