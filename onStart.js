@@ -3,14 +3,37 @@
 // 🕯 Authored by: brforeal.dev@gmail.com
 // 🧠 Signature Intent: Leave behind a thinking pattern, not just a timestamp
 
-// Calculates reduced numerology value from a date string (MM/DD/YYYY)
-function calculateNumerology(dateStr) {
-  const digits = dateStr.replace(/\D/g, "").split("").map(Number);
-  let sum = digits.reduce((a, b) => a + b, 0);
-  while (sum > 9 && ![11, 22, 33].includes(sum)) {
-    sum = sum.toString().split("").reduce((a, b) => a + b, 0);
+const MASTER_NUMBERS = new Set([11, 22, 33]);
+
+function reduceToCoreNumerology(value) {
+  let sum = value;
+  while (sum > 9 && !MASTER_NUMBERS.has(sum)) {
+    sum = sum
+      .toString()
+      .split("")
+      .map(Number)
+      .reduce((total, digit) => total + digit, 0);
   }
   return sum;
+}
+
+// Calculates reduced numerology value from a Date instance (defaults to today)
+function calculateNumerology(dateInput = new Date()) {
+  let date = dateInput instanceof Date ? dateInput : new Date(dateInput);
+
+  if (Number.isNaN(date.getTime())) {
+    console.warn("calculateNumerology received an invalid date input. Defaulting to today's date.");
+    date = new Date();
+  }
+
+  const digits = [
+    ...date.getFullYear().toString(),
+    ...String(date.getMonth() + 1).padStart(2, "0"),
+    ...String(date.getDate()).padStart(2, "0"),
+  ].map(Number);
+
+  const initialSum = digits.reduce((total, digit) => total + digit, 0);
+  return reduceToCoreNumerology(initialSum);
 }
 
 // 🧠 START Phase Logic
@@ -22,18 +45,19 @@ function onStart() {
   tomorrow.setDate(today.getDate() + 1);
 
   const formatDate = (d) =>
-    d.toLocaleDateString("en-US", { year: "numeric", month: "2-digit", day: "2-digit" });
+    `${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}/${d.getFullYear()}`;
 
   const todayStr = formatDate(today);
   const tomorrowStr = formatDate(tomorrow);
 
-  const todayNum = calculateNumerology(todayStr);
-  const tomorrowNum = calculateNumerology(tomorrowStr);
+  const todayNum = calculateNumerology(today);
+  const tomorrowNum = calculateNumerology(tomorrow);
+  const combinedNumerology = reduceToCoreNumerology(todayNum + tomorrowNum);
 
   console.log(`📅 Today: ${todayStr} → Numerology: ${todayNum}`);
   console.log(`📅 Tomorrow: ${tomorrowStr} → Numerology: ${tomorrowNum}`);
 
-  console.log(`🔢 Numerology (Today + Tomorrow): ${todayNum} + ${tomorrowNum}`);
+  console.log(`🔢 Numerology (Today + Tomorrow): ${todayNum} + ${tomorrowNum} → ${combinedNumerology}`);
 
   // 🧭 Historical Footprint (Echo from original build time)
   console.log("🕰 Legacy Seeds: First built on 2025-04-13 by brforeal.dev — as a system that thinks in time.");

@@ -25,7 +25,7 @@ function onTask(phase) {
 
 function onUpdate(phase) {
   console.log("UPDATE: Checking system state");
-  const todayNum = calculateNumerology(new Date().toLocaleDateString('en-US'));
+  const todayNum = calculateNumerology();
   console.log(`》onUpdate: State refreshed, Numerology: ${todayNum}`);
   if (phase === "Recalibration") {
     titanTalk(phase);
@@ -61,7 +61,7 @@ function phaseLoop() {
 
   const phaseInterval = setInterval(() => {
     const phase = phases[phaseIndex];
-    const todayNum = calculateNumerology(new Date().toLocaleDateString('en-US'));
+    const todayNum = calculateNumerology();
     console.log(`Starting Phase: ${phase} → Numerology: ${todayNum}`);
 
     onTask(phase);
