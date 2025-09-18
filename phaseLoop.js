@@ -4,7 +4,7 @@
 
 const { onStart, calculateNumerology, MASTER_NUMBERS } = require('./onStart');
 const { createPhaseJournal } = require('./phaseJournal');
-const { createUpworkTracker } = require('./upworkTracker');
+
 // Optional: const { phaseCorp, mindStateRecursion } = require('./corpofFinality');
 
 function mindSetRecursion(taskNum, totalTasks, phase, steps = []) {
@@ -21,7 +21,9 @@ function titanTalk(phase) {
   return message;
 }
 
-function onTask(phase, journal, upworkTracker) {
+
+function onTask(phase, journal) {
+
   console.log(`TASK TODO: Starting KPI creation for phase: ${phase}`);
   const kpiLogs = mindSetRecursion(1, 4, phase, []);
 
@@ -41,18 +43,15 @@ function onTask(phase, journal, upworkTracker) {
     }
   }
 
-  if (upworkTracker) {
-    upworkTracker.logPhaseTouch(phase, journal, {
-      context: 'runtime-loop',
-      autoAdvanceStatus: true,
-    });
-  }
 
   return kpiLogs;
 }
 
-function onUpdate(phase, journal, upworkTracker) {
-  console.log('UPDATE: Checking system state');
+
+function onUpdate(phase) {
+  console.log("UPDATE: Checking system state");
+
+
   const todayNum = calculateNumerology();
   console.log(`》onUpdate: State refreshed, Numerology: ${todayNum}`);
 
@@ -68,31 +67,9 @@ function onUpdate(phase, journal, upworkTracker) {
     const message = titanTalk(phase);
     if (journal) {
       journal.recordEvent(phase, 'alignment', `${message} (via update)`, {
-      tags: ['titan-talk', 'update'],
-      });
-    }
-  }
 
-  if (upworkTracker) {
-    const atRisk = upworkTracker.getAtRiskDeliverables();
-    if (atRisk.length) {
-      atRisk.forEach(({ deliverable, dueInfo }) => {
-        const message = `Upwork deliverable ${deliverable.id} (${deliverable.title}) requires attention — ${dueInfo.risk}`;
-        if (journal) {
-          journal.recordEvent(phase, 'upwork:risk', message, {
-            deliverableId: deliverable.id,
-            status: deliverable.status,
-            dueDate: deliverable.dueDate || null,
-            dueInDays: dueInfo.dueInDays,
-            risk: dueInfo.risk,
-            tags: ['upwork', 'risk'],
-          });
-        }
-        console.log(`⚠️ ${message}`);
-      });
-    } else if (journal) {
-      journal.recordEvent(phase, 'upwork:risk', 'All tracked Upwork deliverables remain on-track.', {
-        tags: ['upwork', 'risk', 'clear'],
+        tags: ['titan-talk', 'update'],
+
       });
     }
   }
@@ -109,22 +86,15 @@ function onStop(journal) {
   }
 }
 
-function onEOD(journal, upworkTracker) {
+
+function onEOD(journal) {
+
   console.log('EOD: End of day processing');
 
   if (journal) {
     journal.recordEvent('Release + Restart', 'eod', 'End-of-day ritual executed.', {
       tags: ['eod'],
     });
-  }
-
-  if (upworkTracker) {
-    const snapshot = upworkTracker.summarize();
-    journal.recordEvent('Release + Restart', 'upwork:summary', 'Upwork deliverable snapshot archived for restart planning.', {
-      summary: snapshot,
-      tags: ['upwork', 'summary'],
-    });
-    console.log('📦 Upwork Deliverable Snapshot:', JSON.stringify(snapshot, null, 2));
   }
 
   // Optional:
@@ -143,7 +113,7 @@ function phaseLoop() {
   ];
 
   const journal = createPhaseJournal(phases);
-  const upworkTracker = createUpworkTracker();
+
 
   let phaseIndex = 0;
   const phaseDuration = 4800000; // 1.33 hours
@@ -152,7 +122,11 @@ function phaseLoop() {
 
   const phaseInterval = setInterval(() => {
     const phase = phases[phaseIndex];
-    const numerology = calculateNumerology();
+
+
+    const todayNum = calculateNumerology();
+    console.log(`Starting Phase: ${phase} → Numerology: ${todayNum}`);
+
 
     journal.startPhase(phase, {
       numerology,
@@ -162,22 +136,15 @@ function phaseLoop() {
 
     console.log(`Starting Phase: ${phase} → Numerology: ${numerology}`);
 
-    onTask(phase, journal, upworkTracker);
+    onTask(phase, journal);
 
     if (['Reflection', 'Recalibration'].includes(phase)) {
-      onUpdate(phase, journal, upworkTracker);
-    }
-
-    if (upworkTracker) {
-      upworkTracker.markPhaseComplete(phase, journal, {
-        context: 'runtime-loop',
-        autoCompleteDeliverable: phase === 'Release + Restart',
-        completeStatus: 'ready-for-client',
-      });
+      onUpdate(phase, journal);
     }
 
     if (phase === 'Release + Restart') {
-      onEOD(journal, upworkTracker);
+      onEOD(journal);
+
       journal.completePhase(phase, {
         summary: 'Cycle archived and restart prepared.',
         numerology,
@@ -216,19 +183,8 @@ function phaseLoop() {
         tags: ['safety'],
       });
 
-      if (upworkTracker) {
-        upworkTracker.logPhaseTouch(fallbackPhase, journal, {
-          context: 'safety-shutdown',
-          autoAdvanceStatus: true,
-        });
-        upworkTracker.markPhaseComplete(fallbackPhase, journal, {
-          context: 'safety-shutdown',
-          autoCompleteDeliverable: true,
-          completeStatus: 'ready-for-client',
-        });
-      }
+      onEOD(journal);
 
-      onEOD(journal, upworkTracker);
       journal.completePhase(fallbackPhase, {
         summary: 'Cycle closed via safety timer',
         numerology,

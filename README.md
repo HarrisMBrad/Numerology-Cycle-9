@@ -84,6 +84,9 @@ Built to scale across:
 - [x] Automate numerology calculation based on `Date()`
 - [x] Add journaling and smart logging per phase
 - [x] Integrate Upwork deliverable tracking into cycle engine
+- [ ] Add journaling and smart logging per phase
+
+
 
 ---
 
