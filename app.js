@@ -14,18 +14,47 @@ const folderNames = [
   "5_Correction", "6_Connection", "7_Rest", "8_Recalibration", "9_Release_And_Restart"
 ];
 
+const MASTER_NUMBERS = new Set([11, 22, 33]);
+
+function reduceToCoreNumerology(value) {
+  let sum = value;
+  while (sum > 9 && !MASTER_NUMBERS.has(sum)) {
+    sum = sum
+      .toString()
+      .split("")
+      .map(Number)
+      .reduce((total, digit) => total + digit, 0);
+  }
+  return sum;
+}
+
+// 📅 Numerology Utility — automated from current Date()
+function calculateNumerology(dateInput = new Date()) {
+  let date = dateInput instanceof Date ? dateInput : new Date(dateInput);
+
+  if (Number.isNaN(date.getTime())) {
+    console.warn("calculateNumerology received an invalid date input. Defaulting to today's date.");
+    date = new Date();
+  }
+
+  const digits = [
+    ...date.getFullYear().toString(),
+    ...String(date.getMonth() + 1).padStart(2, "0"),
+    ...String(date.getDate()).padStart(2, "0"),
+  ].map(Number);
+
+  const initialSum = digits.reduce((total, digit) => total + digit, 0);
+  return reduceToCoreNumerology(initialSum);
+}
+
 const phaseLogs = [];
 let phaseIndex = 0;
-
-// 📅 Numerology Utility Placeholder
-function calculateNumerology(dateStr) {
-  // Implementation can go here
-  return; // Not used in this version
-}
 
 // 🔁 Repeating Functions
 function onStart() {
   console.log("🌅 START: Beginning new numerology cycle.");
+  const numerology = calculateNumerology();
+  console.log(`🔢 Today's numerology value: ${numerology}`);
 }
 
 function onUpdate() {
@@ -50,7 +79,8 @@ function onTask(phase) {
 
   // ✅ Log start of phase
   const timestamp = new Date().toLocaleTimeString();
-  const log = `🌀 Task for Phase: "${phase}" started at ${timestamp}`;
+  const numerology = calculateNumerology();
+  const log = `🌀 Task for Phase: "${phase}" started at ${timestamp} (Numerology: ${numerology})`;
   phaseLogs.push(log);
   console.log(log);
 
@@ -95,6 +125,9 @@ function onTask(phase) {
 // 🧠 Main Runtime Loop
 function main() {
   onStart();
+
+  phaseIndex = ((calculateNumerology() - 1) % phases.length + phases.length) % phases.length;
+  console.log(`🧮 Start phase aligned to numerology index: ${phaseIndex + 1}`);
 
   const phaseDuration = 4800000;  // 80 mins
   const totalDuration = 43200000; // 12 hours
