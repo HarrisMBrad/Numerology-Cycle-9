@@ -41,9 +41,7 @@ I'm the engineer keeping this numerology-driven workflow awake. The repo isn't j
 
 ## 🧠 Next Steps
 
-
  [ ] Add journaling and smart logging per phase
-
 
 ---
 
