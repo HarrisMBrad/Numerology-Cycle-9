@@ -1,10 +1,11 @@
 // === phaseLoop.js ===
 // Description: Runs the 9-phase loop logic for Numerology-Cycle-9.
-// Dependencies: onStart.js, phaseJournal.js, upworkTracker.js
+// Dependencies: onStart.js, phaseJournal.js, upworkTracker.js, journalStore.js
 
 const { onStart, calculateNumerology, MASTER_NUMBERS } = require('./onStart');
 const { createPhaseJournal } = require('./phaseJournal');
 const { createUpworkTracker } = require('./upworkTracker');
+const { createJournalStore } = require('./journalStore');
 
 // Optional: const { phaseCorp, mindStateRecursion } = require('./corpofFinality');
 
@@ -101,6 +102,24 @@ function archiveUpworkSnapshot(journal, upworkTracker, context) {
   return snapshot;
 }
 
+function persistJournal(journalStore, journal, upworkTracker, metadata = {}) {
+  if (!journalStore) {
+    return null;
+  }
+
+  try {
+    const result = journalStore.writeSnapshot(journal, upworkTracker, {
+      metadata,
+      timestamped: metadata.closeout === true,
+    });
+    console.log(`Journal snapshot written: ${result.written.join(', ')}`);
+    return result;
+  } catch (error) {
+    console.warn(`Journal snapshot skipped: ${error.message}`);
+    return null;
+  }
+}
+
 function onEOD(journal, upworkTracker, context = 'eod') {
   console.log('EOD: End of day processing');
 
@@ -130,6 +149,7 @@ function phaseLoop() {
 
   const journal = createPhaseJournal(phases);
   const upworkTracker = createUpworkTracker();
+  const journalStore = createJournalStore();
 
   let phaseIndex = 0;
   const phaseDuration = 4800000; // 1.33 hours
@@ -174,12 +194,23 @@ function phaseLoop() {
       });
       cycleClosed = true;
       clearInterval(phaseInterval);
+      persistJournal(journalStore, journal, upworkTracker, {
+        context: 'natural-close',
+        phase,
+        numerology,
+        closeout: true,
+      });
       journal.printSummary();
     } else {
       journal.completePhase(phase, {
         summary: 'Phase tasks completed',
         numerology,
         tags: ['progress'],
+      });
+      persistJournal(journalStore, journal, upworkTracker, {
+        context: 'phase-complete',
+        phase,
+        numerology,
       });
     }
 
@@ -221,6 +252,12 @@ function phaseLoop() {
         summary: 'Cycle closed via safety timer',
         numerology,
         tags: ['safety', 'forced'],
+      });
+      persistJournal(journalStore, journal, upworkTracker, {
+        context: 'safety-shutdown',
+        phase: fallbackPhase,
+        numerology,
+        closeout: true,
       });
       journal.printSummary();
       cycleClosed = true;
