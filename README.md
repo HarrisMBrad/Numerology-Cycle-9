@@ -47,7 +47,7 @@ I'm the engineer keeping this numerology-driven workflow awake. The repo is an o
 - [x] Integrate deliverable tracking into the cycle engine
 - [x] Persist the journal stream to local JSON
 - [ ] Expose an API pulse for current phase, numerology, and latest journal entry
-- [ ] Add phase-specific markdown playbooks inside each `Robotic_Systems` folder
+- [x] Add phase-specific markdown playbooks inside each `Robotic_Systems` folder
 
 ---
 
