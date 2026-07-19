@@ -15,7 +15,7 @@ Documents the intention behind the Connection phase: surfacing status to whoever
 
 **<brforeal.dev@gmail.com>**
 
-🕯️ Seed Date: **April 13, 2025**
+🕯️ Authored: alongside the `Robotic_Systems` playbook set — run `git log --follow --format=%ad --date=short -- <this file>` for the exact date
 
 ---
 

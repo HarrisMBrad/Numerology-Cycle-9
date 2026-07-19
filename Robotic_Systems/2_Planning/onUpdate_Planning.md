@@ -15,7 +15,7 @@ This file documents the intention behind the Planning phase of the cycle — the
 
 **<brforeal.dev@gmail.com>**
 
-🕯️ Seed Date: **April 13, 2025**
+🕯️ Authored: alongside the `Robotic_Systems` playbook set — run `git log --follow --format=%ad --date=short -- <this file>` for the exact date
 
 ---
 
